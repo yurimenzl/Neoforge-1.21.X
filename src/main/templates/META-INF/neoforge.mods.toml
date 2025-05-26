@@ -81,10 +81,17 @@ description='''${mod_description}'''
     modId="minecraft"
     type="required"
     # This version range declares a minimum of the current minecraft version up to but not including the next major version
-    versionRange="${minecraft_version_range}"
+    #versionRange="${minecraft_version_range}"
+    versionRange="[1.21.1]"
     ordering="NONE"
     side="BOTH"
 
+[[dependencies.${mod_id}]]
+    modId = "cobblemon"
+    mandatory = true  # Se o seu mod não funcionar sem o Cobblemon
+    versionRange = "[1.6.1,)"  # Versão mínima 1.6.1
+    ordering = "NONE"
+    side = "BOTH"  # Funciona no cliente e no servidor
 # Features are specific properties of the game environment, that you may want to declare you require. This example declares
 # that your mod requires GL version 3.2 or higher. Other features will be added. They are side aware so declaring this won't
 # stop your mod loading on the server for example.

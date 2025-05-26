@@ -18,6 +18,9 @@ group = mod_group_id
 
 repositories {
     mavenLocal()
+    maven {
+        url = "https://cursemaven.com" // Repositório do Cobblemon (CurseForge)
+    }
 }
 
 base {
@@ -123,6 +126,11 @@ dependencies {
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
+    compileOnly("curse.maven:cobblemon-687131:6125026") // Verifique o ID mais recente
+    // Dependência do Cobblemon (verifique a versão compatível com 1.21.1)
+    //compileOnly("com.cobblemon:mod:1.6.1+1.21.1")
+    //runtimeOnly("com.cobblemon:mod:1.6.1+1.21.1")
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.23"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

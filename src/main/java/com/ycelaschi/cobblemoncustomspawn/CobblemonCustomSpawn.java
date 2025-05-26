@@ -1,9 +1,9 @@
 package com.ycelaschi.cobblemoncustomspawn;
 
 import org.slf4j.Logger;
-
 import com.mojang.logging.LogUtils;
 
+import com.ycelaschi.cobblemoncustomspawn.util.PokemonSpawnListener;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -16,6 +16,15 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import com.cobblemon.mod.common.api.events.entity.SpawnEvent;
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
+import com.cobblemon.mod.common.pokemon.Pokemon;
+import com.cobblemon.mod.common.pokemon.IVs;
+import com.cobblemon.mod.common.api.Priority;
+import com.cobblemon.mod.common.api.pokemon.stats.Stats;
+import kotlin.Unit;
+
+import java.util.*;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(CobblemonCustomSpawn.MOD_ID)
@@ -41,6 +50,41 @@ public class CobblemonCustomSpawn  {
 
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+    }
+
+    public static void initialize() {
+        PokemonSpawnListener.onPokemonSpawn(Priority.HIGH, (PokemonEntity pokemonEntity) -> {
+
+            Pokemon originalPokemon = pokemonEntity.getPokemon();
+
+            // Lista de todos os IVs (Stats)
+            List<Stats> statsList = new ArrayList<>(Arrays.asList(
+                    Stats.HP,
+                    Stats.ATTACK,
+                    Stats.DEFENCE,
+                    Stats.SPECIAL_ATTACK,
+                    Stats.SPECIAL_DEFENCE,
+                    Stats.SPEED
+            ));
+
+            // Embaralha a lista e pega os 3 primeiros para setar como 31
+            Collections.shuffle(statsList);
+            Set<Stats> maxedIVs = new HashSet<>(statsList.subList(0, 3));
+
+            Random random = new Random();
+
+            for (Stats stat : Stats.values()) {
+                if (maxedIVs.contains(stat)) {
+                    originalPokemon.setIV(stat, 31);
+                } else {
+                    originalPokemon.setIV(stat, random.nextInt(32)); // 0 a 31
+                }
+            }
+
+            pokemonEntity.setPokemon(originalPokemon);
+
+            return Unit.INSTANCE;
+        });
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)
