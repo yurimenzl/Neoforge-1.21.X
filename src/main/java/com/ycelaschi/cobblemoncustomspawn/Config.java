@@ -43,7 +43,7 @@ public class Config
     public static boolean logDirtBlock;
     public static int magicNumber;
     public static String magicNumberIntroduction;
-    public static Set<Optional<Holder.Reference<Item>>> items;
+    public static Set<Item> items;
 
     private static boolean validateItemName(final Object obj)
     {
@@ -56,5 +56,9 @@ public class Config
         logDirtBlock = LOG_DIRT_BLOCK.get();
         magicNumber = MAGIC_NUMBER.get();
         magicNumberIntroduction = MAGIC_NUMBER_INTRODUCTION.get();
+
+        items = ITEM_STRINGS.get().stream()
+                .map(itemName -> BuiltInRegistries.ITEM.get(ResourceLocation.parse(itemName)))
+                .collect(Collectors.toSet());
     }
 }

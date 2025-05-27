@@ -1,5 +1,5 @@
-modLoader = "neoforge"
-loaderVersion = "[21,)"
+modLoader = "javafml"
+loaderVersion = "${loader_version_range}"
 license = "MIT"
 
 [[mods]]
