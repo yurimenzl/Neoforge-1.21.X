@@ -22,6 +22,10 @@ import com.cobblemon.mod.common.api.Priority;
 import com.cobblemon.mod.common.api.pokemon.stats.Stats;
 import kotlin.Unit;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 // The value here should match an entry in the META-INF/neoforge.neoforge.mods.toml file
 @Mod(CobblemonSpawnCustom.MOD_ID)
 public class CobblemonSpawnCustom  {
@@ -47,21 +51,46 @@ public class CobblemonSpawnCustom  {
     }
 
     public static void initialize() {
-        PokemonSpawnListener.onPokemonSpawn(Priority.HIGH, (PokemonEntity pokemonEntity) -> {
+        ConfigLoader.loadConfig();
 
+        PokemonSpawnListener.onPokemonSpawn(Priority.HIGH, (PokemonEntity pokemonEntity) -> {
             Pokemon originalPokemon = pokemonEntity.getPokemon();
-            System.out.println("Name: " + originalPokemon.getSpecies().getName());
-            //if (originalPokemon.getSpecies().getName().equalsIgnoreCase("eevee")) {
-                originalPokemon.setIV(Stats.HP, 31);
-                originalPokemon.setIV(Stats.ATTACK, 31);
-                originalPokemon.setIV(Stats.DEFENCE, 31);
-                originalPokemon.setIV(Stats.SPECIAL_ATTACK, 31);
-                originalPokemon.setIV(Stats.SPECIAL_DEFENCE, 31);
-                originalPokemon.setIV(Stats.SPEED, 31);
-                //System.out.println("Changed Eevee IV: Successfully!");
+            String speciesName = originalPokemon.getSpecies().getName().toLowerCase();
+
+
+
+            //if (ConfigLoader.isSpeciesAllowed(speciesName)) {
+                //System.out.println("Species allowed for modification.");
+
+                int ivValue = ConfigLoader.getIvValue();
+                int ivQuantity = ConfigLoader.getIvQuantity();
+
+                System.out.println("Name: " + speciesName);
+                System.out.println("ConfIV: " + ivValue);
+                System.out.println("confIVQuantity: " + ivQuantity);
+
+                List<Stats> allStats = Arrays.asList(
+                        Stats.HP,
+                        Stats.ATTACK,
+                        Stats.DEFENCE,
+                        Stats.SPECIAL_ATTACK,
+                        Stats.SPECIAL_DEFENCE,
+                        Stats.SPEED
+                );
+
+                Collections.shuffle(allStats);
+                List<Stats> selectedStats = allStats.subList(0, ivQuantity);
+
+                for (Stats stat : selectedStats) {
+                    originalPokemon.setIV(stat, ivValue);
+                    System.out.println("Set IV for: " + stat.name() + "for " + speciesName);
+                }
+
+                pokemonEntity.setPokemon(originalPokemon);
+            //} else {
+            //    System.out.println("Species not in config list, skipping modification.");
             //}
 
-            //pokemonEntity.setPokemon(originalPokemon);
 
             return Unit.INSTANCE;
         });
