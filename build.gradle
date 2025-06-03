@@ -98,7 +98,7 @@ configurations {
 }
 
 dependencies {
-    compileOnly("curse.maven:cobblemon-687131:6125026")
+    implementation "curse.maven:cobblemon-687131:6125026"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.23"
 }
 

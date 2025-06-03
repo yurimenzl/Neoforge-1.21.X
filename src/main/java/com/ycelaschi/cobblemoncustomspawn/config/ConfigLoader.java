@@ -19,11 +19,12 @@ public class ConfigLoader {
                 JsonObject group = entry.getValue().getAsJsonObject();
                 int ivValue = group.has("iv_value") ? group.get("iv_value").getAsInt() : 31;
                 int ivQuantity = group.has("iv_quantity") ? group.get("iv_quantity").getAsInt() : 3;
-
+                double shinyChance = group.has("shiny_chance") ? group.get("shiny_chance").getAsDouble() : 0.00012207;
+                double haChance = group.has("ha_chance") ? group.get("ha_chance").getAsDouble() : 0.00012207;
                 JsonArray speciesArray = group.getAsJsonArray("species_list");
                 for (JsonElement speciesElement : speciesArray) {
                     String speciesName = speciesElement.getAsString().toLowerCase();
-                    speciesConfigMap.put(speciesName, new SpeciesConfig(ivValue, ivQuantity));
+                    speciesConfigMap.put(speciesName, new SpeciesConfig(ivValue, ivQuantity, shinyChance, haChance));
                 }
             }
 
