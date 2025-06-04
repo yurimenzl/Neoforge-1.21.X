@@ -51,9 +51,6 @@ public class CobblemonSpawnCustom  {
                 double shinyChance = config.shinyChance;
                 double haChance = config.haChance;
 
-                System.out.println("Modificando IVs de: " + speciesName);
-                System.out.println("IV Value: " + ivValue + " | IV Quantity: " + ivQuantity);
-
                 List<Stats> allStats = Arrays.asList(
                         Stats.HP, Stats.ATTACK, Stats.DEFENCE,
                         Stats.SPECIAL_ATTACK, Stats.SPECIAL_DEFENCE, Stats.SPEED
@@ -65,35 +62,31 @@ public class CobblemonSpawnCustom  {
 
                 for (Stats stat : selectedStats) {
                     originalPokemon.setIV(stat, ivValue);
-                    Log.info("Set IV for: " + stat.name() + "for " + speciesName);
+                    LOGGER.info("[Cobblemon Spawn Custom] Set {} IV {} for: {}", stat, ivValue, speciesName);
                 }
 
                 for (Stats stat : remainingStats) {
                     Random rand = new Random();
                     int randomIv = rand.nextInt(32); // de 0 a 31
                     originalPokemon.setIV(stat, randomIv);
-                    Log.info("Set RANDOM IV " + randomIv + " for: " + stat.name());
+                    LOGGER.info("[Cobblemon Spawn Custom] Set {} IV {} for: {}", stat, randomIv, speciesName);
                 }
 
                 Random randomShiny = new Random();
                 double shinyRandom = randomShiny.nextDouble();
-                LOGGER.info("Set SHINY RAND {} for: {}", shinyRandom, shinyChance);
-
                 if ( shinyRandom < shinyChance) {
                     originalPokemon.setShiny(true);
+                    LOGGER.info("[Cobblemon Spawn Custom] Set Shiny for: {}", speciesName);
                 }
 
                 Random randomHa = new Random();
                 double haRandom = randomHa.nextDouble();
-                LOGGER.info("Set HA RAND {} for: {}", haRandom, haChance);
-
                 if ( haRandom < haChance) {
                     new HiddenAbilityProperty(true).apply(originalPokemon);
+                    LOGGER.info("[Cobblemon Spawn Custom] Set Hidden Ability for: {}", speciesName);
                 }
 
                 pokemonEntity.setPokemon(originalPokemon);
-            } else {
-               // Log.info("Espécie " + speciesName + " não configurada. Ignorando.");
             }
 
             return Unit.INSTANCE;
